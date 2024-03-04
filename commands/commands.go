@@ -57,9 +57,6 @@ func DropTable(command string) {
 
 func InsertInto(command string) {
 
-	//create table table (column1, column2, column3)
-	//ex: insert into table (column1, column2, column3) values (value1, value2, value3)
-	
 	table := strings.Split(command, " ")[2]
 
 	if _, err :=
@@ -68,7 +65,6 @@ func InsertInto(command string) {
 		return
 	}
 
-	//escrever os values
 	values := strings.Split(command, "values")[1]
 	values = strings.Split(values, "(")[1]
 	values = strings.Split(values, ")")[0]
@@ -91,3 +87,39 @@ func InsertInto(command string) {
 
 	fmt.Println("Registro inserido com sucesso")
 }
+
+func SelectFrom(command string) {
+	
+	table := strings.Split(command, " ")[3]
+
+	if _, err := os.Stat("data/" + table + ".csv"); os.IsNotExist(err) {
+		fmt.Println("Tabela não existe")
+		return
+	}
+
+	file, err := os.Open("data/" + table + ".csv")
+	if err != nil {
+		fmt.Println("Erro ao abrir arquivo")
+		return
+	}
+
+	defer file.Close()
+
+	fmt.Println("Tabela: " + table)
+	fmt.Println("")
+	var columns string
+	fmt.Fscanf(file, "%s\n", &columns)
+	columns = strings.Replace(columns, ";", " | ", -1)
+	fmt.Println(columns)
+
+	var line string
+	for {
+		_, err := fmt.Fscanf(file, "%s\n", &line)
+		if err != nil {
+			break
+		}
+		line = strings.Replace(line, ";", " | ", -1)
+		fmt.Println(line)
+	}
+}
+

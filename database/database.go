@@ -20,6 +20,7 @@ func (Database) ExecuteQuery(query string) string {
 		fmt.Print("\033[H\033[2J")
 	case "select":
 		fmt.Println("Executando comando SELECT")
+		commands.SelectFrom(query)
 	case "insert":
 		fmt.Println("Executando comando INSERT")
 		commands.InsertInto(query)
