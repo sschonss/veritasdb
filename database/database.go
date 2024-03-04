@@ -22,6 +22,7 @@ func (Database) ExecuteQuery(query string) string {
 		fmt.Println("Executando comando SELECT")
 	case "insert":
 		fmt.Println("Executando comando INSERT")
+		commands.InsertInto(query)
 	case "update":
 		fmt.Println("Executando comando UPDATE")
 	case "delete":
