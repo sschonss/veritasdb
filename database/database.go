@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"veritasdb/commands"
 )
 
 type Database struct {
@@ -27,6 +28,7 @@ func (Database) ExecuteQuery(query string) string {
 		fmt.Println("Executando comando DELETE")
 	case "create":
 		fmt.Println("Executando comando CREATE")
+		commands.CreateTable(query)
 	case "drop":
 		fmt.Println("Executando comando DROP")
 	case "alter":
