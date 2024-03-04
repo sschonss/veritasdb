@@ -5,11 +5,14 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"veritasdb/table"
 )
 
 func main() {
 
 	configFile, err := os.Open("data/login.txt")
+	var tb *table.Table
 	if err != nil {
 		fmt.Println("Arquivo de configuração não encontrado. Por favor, insira as informações de login.")
 		fmt.Print("Usuário: ")
@@ -50,13 +53,16 @@ func main() {
 			
 	}
 
-	for {
-		fmt.Print("Digite um comando SQL (ou 'exit' para sair): ")
-		command := getUserInput()
+	fmt.Println("Bem-vindo ao VeritasDB!")
 
-		if strings.ToLower(command) == "exit" {
+	for {
+		fmt.Print("veritastb> ")
+		query := getUserInput()
+		if query == "exit" {
 			break
 		}
+		fmt.Println(tb.ExecuteQuery(query))
+
 	}
 }
 
@@ -97,41 +103,3 @@ func saveConfig(user, password string) {
 	fmt.Println("Configurações salvas com sucesso.")
 }
 
-
-type Database struct {
-	Name     string
-	DataPath string
-}
-
-func NewDatabase(name, dataPath string) *Database {
-	return &Database{
-		Name:     name,
-		DataPath: dataPath,
-	}
-}
-
-func (db *Database) ExecuteQuery(query string) string {
-
-	command := strings.Fields(query)[0]
-	switch strings.ToLower(command) {
-	case "select":
-		fmt.Println("Executando comando SELECT")
-	case "insert":
-		fmt.Println("Executando comando INSERT")
-	case "update":
-		fmt.Println("Executando comando UPDATE")
-	case "delete":
-		fmt.Println("Executando comando DELETE")
-	case "create":
-		fmt.Println("Executando comando CREATE")
-	case "drop":
-		fmt.Println("Executando comando DROP")
-	case "alter":
-		fmt.Println("Executando comando ALTER")
-	default:
-		fmt.Println("Comando não reconhecido")
-	}
-
-	return "Resultado da execução do comando: " + query
-
-}
