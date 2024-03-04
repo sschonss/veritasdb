@@ -31,6 +31,7 @@ func (Database) ExecuteQuery(query string) string {
 		commands.CreateTable(query)
 	case "drop":
 		fmt.Println("Executando comando DROP")
+		commands.DropTable(query)
 	case "alter":
 		fmt.Println("Executando comando ALTER")
 	default:

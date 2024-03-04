@@ -36,3 +36,21 @@ func CreateTable(command string) {
 
 	fmt.Println("Tabela criada com sucesso")
 }
+
+func DropTable(command string) {
+
+	table := strings.Split(command, " ")[2]
+
+	if _, err := os.Stat("data/" + table + ".csv"); os.IsNotExist(err) {
+		fmt.Println("Tabela não existe")
+		return
+	}
+
+	err := os.Remove("data/" + table + ".csv")
+	if err != nil {
+		fmt.Println("Erro ao deletar tabela")
+		return
+	}
+
+	fmt.Println("Tabela deletada com sucesso")
+}
