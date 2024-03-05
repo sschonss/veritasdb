@@ -89,6 +89,77 @@ func InsertInto(command string) {
 }
 
 func SelectFrom(command string) {
+	if strings.Contains(command, "*") {
+		SelectAllFrom(command)
+		return
+	}
+	
+	//pegar o nome das colunas que vao estar na query
+	// select nome, idade from tabela -> exemplo
+	//depois de select, pega o que vem depois do select e antes do from que vai estar separado por virgula
+	//depois de from, pega o que vem depois do from que vai ser o nome da tabela
+
+	//salvar as colunas em um array
+	//salvar o nome da tabela em uma variavel
+
+	arrayColumns := strings.Split(command, " ")[1]
+	arrayColumns = strings.Split(arrayColumns, "from")[0]
+	arrayColumns = strings.Replace(arrayColumns, " ", "", -1)
+	arrayColumns = strings.Split(arrayColumns, ",")[0]
+
+	fmt.Println("Colunas: " + arrayColumns)
+
+	table := strings.Split(command, " ")[3]
+
+	if _, err := os.Stat("data/" + table + ".csv"); os.IsNotExist(err) {
+		fmt.Println("Tabela não existe")
+		return
+	}
+
+	file, err := os.Open("data/" + table + ".csv")
+	if err != nil {
+		fmt.Println("Erro ao abrir arquivo")
+		return
+	}
+
+	defer file.Close()
+
+	fmt.Println("Tabela: " + table)
+
+	//pegar as colunas do arquivo, vao ser a primeira linha do arquivo separada por ;
+	var columnsTable string
+	fmt.Fscanf(file, "%s\n", &columnsTable)
+	columnsTableArray := strings.Split(columnsTable, ";")
+
+	//pegar os dados somente das colunas que foram passadas na query
+
+	for i := 0; i < len(columnsTableArray); i++ {
+		if columnsTableArray[i] == arrayColumns {
+			fmt.Println(columnsTableArray[i])
+		}
+	}
+
+	//pegar os dados das colunas que foram passadas na query
+	var line string
+	for {
+		_, err := fmt.Fscanf(file, "%s\n", &line)
+		if err != nil {
+			break
+		}
+		lineArray := strings.Split(line, ";")
+		for i := 0; i < len(lineArray); i++ {
+			if columnsTableArray[i] == arrayColumns {
+				fmt.Println(lineArray[i])
+			}
+		}
+	}
+
+
+}
+
+
+
+func SelectAllFrom(command string) {
 	
 	table := strings.Split(command, " ")[3]
 
