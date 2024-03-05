@@ -93,14 +93,6 @@ func SelectFrom(command string) {
 		SelectAllFrom(command)
 		return
 	}
-	
-	//pegar o nome das colunas que vao estar na query
-	// select nome, idade from tabela -> exemplo
-	//depois de select, pega o que vem depois do select e antes do from que vai estar separado por virgula
-	//depois de from, pega o que vem depois do from que vai ser o nome da tabela
-
-	//salvar as colunas em um array
-	//salvar o nome da tabela em uma variavel
 
 	arrayColumns := strings.Split(command, " ")[1]
 	arrayColumns = strings.Split(arrayColumns, "from")[0]
@@ -126,12 +118,9 @@ func SelectFrom(command string) {
 
 	fmt.Println("Tabela: " + table)
 
-	//pegar as colunas do arquivo, vao ser a primeira linha do arquivo separada por ;
 	var columnsTable string
 	fmt.Fscanf(file, "%s\n", &columnsTable)
 	columnsTableArray := strings.Split(columnsTable, ";")
-
-	//pegar os dados somente das colunas que foram passadas na query
 
 	for i := 0; i < len(columnsTableArray); i++ {
 		if columnsTableArray[i] == arrayColumns {
@@ -139,7 +128,6 @@ func SelectFrom(command string) {
 		}
 	}
 
-	//pegar os dados das colunas que foram passadas na query
 	var line string
 	for {
 		_, err := fmt.Fscanf(file, "%s\n", &line)
