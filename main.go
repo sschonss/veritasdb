@@ -10,8 +10,16 @@ func main() {
 
 	var db database.Database
 
+	dirData := database.CheckExisteDirData()
+	if !dirData {
+		fmt.Println("Diretório data não encontrado.")
+		fmt.Println("Criando diretório data...")
+		database.CreateDirData()
+		fmt.Println("Diretório data criado com sucesso.")
+	}
+
 	config := db.CheckConfig()
-	if config == true {
+	if config {
 		fmt.Println("Configurações encontradas.")
 		fmt.Println("Digite o usuário e a senha para carregar as configurações.")
 		fmt.Print("Usuário: ")
@@ -20,7 +28,7 @@ func main() {
 		password := database.GetUserInput()
 		valid := db.CheckUser(user, password)
 		count_try := 0
-		for valid == false {
+		for !valid {
 			count_try++
 			if count_try > 2 {
 				fmt.Println("Número de tentativas excedido.")

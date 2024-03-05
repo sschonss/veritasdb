@@ -89,6 +89,11 @@ func InsertInto(command string) {
 }
 
 func SelectFrom(command string) {
+	if strings.Contains(command, "where") {
+		SelectWhere(command)
+		return
+	}
+
 	if strings.Contains(command, "*") {
 		SelectAllFrom(command)
 		return
@@ -141,11 +146,71 @@ func SelectFrom(command string) {
 			}
 		}
 	}
-
-
 }
 
+func SelectWhere(command string) {
+	if strings.Contains(command, "*") {
+		SelectAllFromWhere(command)
+		return
+	}
+}
 
+func SelectAllFromWhere(command string)  {
+	table := strings.Split(command, " ")[3]
+
+	if _, err := os.Stat("data/" + table + ".csv"); os.IsNotExist(err) {
+		fmt.Println("Tabela não existe")
+		return
+	}
+
+	file, err := os.Open("data/" + table + ".csv")
+	if err != nil {
+		fmt.Println("Erro ao abrir arquivo")
+		return
+	}
+
+	defer file.Close()
+
+	fmt.Println("Tabela: " + table)
+	fmt.Println("")
+	var columns string
+	fmt.Fscanf(file, "%s\n", &columns)
+	columns = strings.Replace(columns, ";", " | ", -1)
+	fmt.Println(columns)
+
+	operadores := []string{"=", ">", "<", ">=", "<=", "<>"}
+	conditions := strings.Split(command, "where")[1]
+	conditions = strings.Replace(conditions, " ", "", -1)
+	conditions = strings.Replace(conditions, "(", "", -1)
+	conditions = strings.Replace(conditions, ")", "", -1)
+	conditions = strings.Replace(conditions, ";", "", -1)
+	conditions_array := strings.Split(conditions, "and")
+
+	var operador string
+	for i := 0; i < len(operadores); i++ {
+		if strings.Contains(conditions_array[0], operadores[i]) {
+			operador = operadores[i]
+		}
+	}
+
+	valor := strings.Split(conditions_array[0], operador)[1]
+	valor = strings.Replace(valor, " ", "", -1)
+
+	var line string
+	for {
+		_, err := fmt.Fscanf(file, "%s\n", &line)
+		if err != nil {
+			break
+		}
+
+		if operador == "=" {
+			if strings.Contains(line, valor) {
+				line = strings.Replace(line, ";", " | ", -1)
+				fmt.Println(line)
+			}
+		}
+	}
+}
 
 func SelectAllFrom(command string) {
 	
