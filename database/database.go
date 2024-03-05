@@ -14,6 +14,7 @@ type Database struct {
 }
 
 func (Database) ExecuteQuery(query string) string {
+	query = strings.ToLower(query)
 	command := strings.Fields(query)[0]
 	switch strings.ToLower(command) {
 	case "clear":
