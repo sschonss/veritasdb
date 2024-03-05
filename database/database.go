@@ -89,6 +89,22 @@ func (Database) LoadConfig() (string, string) {
 	return user, password
 }
 
+func CheckExisteDirData() bool {
+	_, err := os.Stat("data")
+	if os.IsNotExist(err) {
+		return false
+	} else {
+		return true
+	}
+}
+
+func CreateDirData() {
+	err := os.Mkdir("data", 0755)
+	if err != nil {
+		fmt.Println("Erro ao criar diretório data")
+	}
+}
+
 func (Database) CheckConfig() bool {
 	_, err := os.Stat("data/config.txt")
 	if os.IsNotExist(err) {
