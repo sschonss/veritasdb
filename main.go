@@ -18,6 +18,7 @@ func main() {
 		fmt.Println("Diretório data criado com sucesso.")
 	}
 
+	config := db.CheckConfig()
 	if config {
 		fmt.Println("Configurações encontradas.")
 		fmt.Println("Digite o usuário e a senha para carregar as configurações.")
